@@ -7,8 +7,7 @@ from types import FunctionType
 from mininet.log import setLogLevel, info
 from minindn.minindn import Minindn
 
-import test_001
-import test_002
+import multicast_001
 
 def run(scenario: FunctionType, **kwargs) -> None:
     try:
@@ -41,8 +40,7 @@ if __name__ == '__main__':
     ndn = Minindn()
     ndn.start()
 
-    run(test_001.scenario_ndnd_fw)
-    #run(test_001.scenario_nfd)
-    run(test_002.scenario)
+    run(multicast_001.scenario_old)
+    run(multicast_001.scenario_new)
 
     ndn.stop()
