@@ -23,8 +23,9 @@ def scenario(ndn: Minindn, true_multicast=False, network='/minindn'):
     """
     TBD
     """
-    
+
     fw = NDNd_FW
+
 
     info('Starting forwarder on nodes\n')
     AppManager(ndn, ndn.net.hosts, fw)
