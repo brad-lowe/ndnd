@@ -36,8 +36,8 @@ if __name__ == '__main__':
 
     Minindn.cleanUp()
     Minindn.verifyDependencies()
-
-    ndn = Minindn()
+    
+    ndn = Minindn(topoFile="../topo.sprint.conf")
     ndn.start()
 
     run(multicast_001.scenario_old)

@@ -25,11 +25,12 @@ type Multicast struct {
 
 func init() {
 	strategyInit = append(strategyInit, func() Strategy { return &Multicast{} })
-	StrategyVersions["multicast"] = []uint64{1}
+	StrategyVersions["multicast"] = []uint64{1, 2}
 }
 
 func (s *Multicast) Instantiate(fwThread *Thread) {
 	s.NewStrategyBase(fwThread, "multicast", 1)
+	s.NewStrategyBase(fwThread, "multicast", 2)
 }
 
 func (s *Multicast) AfterContentStoreHit(
