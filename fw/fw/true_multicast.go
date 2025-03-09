@@ -16,23 +16,23 @@ import (
 )
 
 // MulticastSuppressionTime is the time to suppress retransmissions of the same Interest.
-const MulticastSuppressionTime = 500 * time.Millisecond
+const TrueMulticastSuppressionTime = 500 * time.Millisecond
 
 // Multicast is a forwarding strategy that forwards Interests to all nexthop faces.
-type Multicast struct {
+type TrueMulticast struct {
 	StrategyBase
 }
 
 func init() {
-	strategyInit = append(strategyInit, func() Strategy { return &Multicast{} })
-	StrategyVersions["multicast"] = []uint64{1}
+	strategyInit = append(strategyInit, func() Strategy { return &TrueMulticast{} })
+	StrategyVersions["true_multicast"] = []uint64{1}
 }
 
-func (s *Multicast) Instantiate(fwThread *Thread) {
-	s.NewStrategyBase(fwThread, "multicast", 1)
+func (s *TrueMulticast) Instantiate(fwThread *Thread) {
+	s.NewStrategyBase(fwThread, "true_multicast", 1)
 }
 
-func (s *Multicast) AfterContentStoreHit(
+func (s *TrueMulticast) AfterContentStoreHit(
 	packet *defn.Pkt,
 	pitEntry table.PitEntry,
 	inFace uint64,
@@ -41,7 +41,7 @@ func (s *Multicast) AfterContentStoreHit(
 	s.SendData(packet, pitEntry, inFace, 0) // 0 indicates ContentStore is source
 }
 
-func (s *Multicast) AfterReceiveData(
+func (s *TrueMulticast) AfterReceiveData(
 	packet *defn.Pkt,
 	pitEntry table.PitEntry,
 	inFace uint64,
@@ -53,7 +53,7 @@ func (s *Multicast) AfterReceiveData(
 	}
 }
 
-func (s *Multicast) AfterReceiveInterest(
+func (s *TrueMulticast) AfterReceiveInterest(
 	packet *defn.Pkt,
 	pitEntry table.PitEntry,
 	inFace uint64,
@@ -69,7 +69,7 @@ func (s *Multicast) AfterReceiveInterest(
 	now := time.Now()
 	for _, outRecord := range pitEntry.OutRecords() {
 		if outRecord.LatestNonce != packet.L3.Interest.NonceV.Unwrap() &&
-			outRecord.LatestTimestamp.Add(MulticastSuppressionTime).After(now) {
+			outRecord.LatestTimestamp.Add(TrueMulticastSuppressionTime).After(now) {
 			core.Log.Debug(s, "Suppressed Interest", "name", packet.Name)
 			return
 		}
@@ -82,6 +82,6 @@ func (s *Multicast) AfterReceiveInterest(
 	}
 }
 
-func (s *Multicast) BeforeSatisfyInterest(pitEntry table.PitEntry, inFace uint64) {
+func (s *TrueMulticast) BeforeSatisfyInterest(pitEntry table.PitEntry, inFace uint64) {
 	// This does nothing in Multicast
 }

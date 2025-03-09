@@ -14,12 +14,12 @@ from fw import NDNd_FW
 import dv_util
 
 def scenario_old(ndn: Minindn):
-    scenario(ndn, version=1)
+    scenario(ndn, strategy='multicast')
 
 def scenario_new(ndn: Minindn):
-    scenario(ndn, version=2)
+    scenario(ndn, strategy='true_multicast')
 
-def scenario(ndn: Minindn, version=1, network='/minindn'):
+def scenario(ndn: Minindn, strategy='multicast', network='/minindn'):
     """
     Simple file transfer scenario with NDNd and NFD forwarders.
     This tests routing convergence and cat/put operations.
@@ -35,7 +35,7 @@ def scenario(ndn: Minindn, version=1, network='/minindn'):
     dv_util.converge(ndn.net.hosts, network=network)
 
     for node in ndn.net.hosts:
-        cmd = f'ndnd fw strategy-set prefix=/sync strategy=/localhost/nfd/strategy/multicast/v={version}'
+        cmd = f'ndnd fw strategy-set prefix={network} strategy=/localhost/nfd/strategy/{strategy}/v=1'
         info(f'{node.name} {cmd}\n')
         node.cmd(cmd)
 
