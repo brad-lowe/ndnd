@@ -34,6 +34,12 @@ def scenario(ndn: Minindn, version=1, network='/minindn'):
     dv_util.setup(ndn, network=network)
     dv_util.converge(ndn.net.hosts, network=network)
 
+    for node in ndn.net.hosts:
+        cmd = f'ndnd fw strategy-set prefix=/sync strategy=/localhost/nfd/strategy/multicast/v={version}'
+        info(f'{node.name} {cmd}\n')
+        node.cmd(cmd)
+
+    
     info('Testing file transfer\n')
     test_file = '/tmp/test.bin'
     os.system(f'dd if=/dev/urandom of={test_file} bs=50000 count=1')
